@@ -1,6 +1,5 @@
-import Controller;
 public class Main {
     public static void main(String... args) throws IOException, GeneralSecurityException, MessagingException {
-        controller Controller;
+        Controller controller;
     }
 }
