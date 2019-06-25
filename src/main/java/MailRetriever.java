@@ -11,7 +11,7 @@ public class MailRetriever {
     }
 
    /* public List<Email> listMessageWithLabels(Gmail gmail,String userId, List<String> stringList){
-       
+
     }*/
 
     public List<Email> getMessageReservoir() {
