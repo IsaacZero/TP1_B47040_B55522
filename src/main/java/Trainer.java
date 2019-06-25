@@ -1,10 +1,11 @@
-import com.google.api.client.util.ArrayMap;
-
-import java.util.ArrayList;
-
+import java.util.*;
 public class Trainer {
-    public static void Train(double spamProbability, double spamThreshold, ArrayList<Email> messages,
-                             ArrayMap<String, Term> blackList, ArrayMap<String, Term> normalList){
+    public  Trainer(){
+
+    }
+
+    public void train(double spam, double normal, List<Email> emailList,Map<String,Term> spamMap,Map<String,
+            Term>NormalMap){
 
     }
 }

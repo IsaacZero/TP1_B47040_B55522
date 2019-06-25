@@ -1,9 +1,9 @@
-import com.google.api.client.util.ArrayMap;
+import java.util.Map;
 
 public class SpamFilter {
-    Trainer trainer;
-    Configuration configuration;
-    ArrayMap<String, Term> blackList;
-    ArrayMap<String, Term> normalList;
-    FileManager fileManager;
+    private Trainer trainer;
+    private Map<String,Term> blackList;
+    private Map<String,Term> normalList;
+    private FileManager fileManager;
+    private FilterConfiguration filterConfiguration;
 }
