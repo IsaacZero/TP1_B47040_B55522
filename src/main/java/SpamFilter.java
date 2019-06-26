@@ -6,5 +6,4 @@ public class SpamFilter {
     private Map<String,Term> normalList;
     private FileManager fileManager;
     private FilterConfiguration filterConfiguration;
-
 }

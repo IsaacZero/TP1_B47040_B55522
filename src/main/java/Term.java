@@ -55,5 +55,4 @@ public class Term {
     public void setProbNormal(double probNormal) {
         this.probNormal = probNormal;
     }
-
 }
