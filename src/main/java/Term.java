@@ -1,14 +1,14 @@
 public class Term {
     private String word;
-    private double frequencySpam;
-    private double frequencyNormal;
+    private int frequencySpam;
+    private int frequencyNormal;
     private double probSpam;
     private double probNormal;
 
     public Term() {
     }
 
-    public Term(String word, double frequencyNormal, double frequencySpam, double probSpam, double probNormal){
+    public Term(String word, int frequencyNormal, int frequencySpam, double probSpam, double probNormal){
         this.word = word;
         this.frequencySpam = frequencySpam;
         this.frequencyNormal = frequencyNormal;
@@ -24,21 +24,19 @@ public class Term {
         this.word = word;
     }
 
-    public double getFrequenceSpam() {
+    public int getFrequencySpam() {
         return frequencySpam;
     }
 
-    public void setFrequenceSpam(double frequenceSpam) {
-        this.frequencySpam = frequenceSpam;
+    public void setFrequencySpam(int frequencySpam) {
+        this.frequencySpam = frequencySpam;
     }
 
-    public double getFrequenceNormal() {
+    public int getFrequencyNormal() {
         return frequencyNormal;
     }
 
-    public void setFrequenceNormal(double frequenceNormal) {
-        this.frequencyNormal = frequenceNormal;
-    }
+    public void setFrequencyNormal(int frequencyNormal) { this.frequencyNormal = frequencyNormal; }
 
     public double getProbSpam() {
         return probSpam;
