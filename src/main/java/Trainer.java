@@ -1,4 +1,8 @@
 import com.google.api.client.util.ArrayMap;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 public class Trainer {
@@ -6,25 +10,30 @@ public class Trainer {
 
     }
 
-    public Map<String,Term> train(ArrayList<Email> spamEmailList, ArrayList<Email> normalEmailList) {
+    public Map<String,Term> train(ArrayList<Email> spamEmailList, ArrayList<Email> normalEmailList)
+            throws IOException {
         Map<String, Boolean> analyzed = new ArrayMap<String, Boolean>();
         Map<String,Term> blackList = new ArrayMap<String, Term>();
-        int frequencySpam;
-        int frequencyNormal;
-        double probabilitySpam;
-        double probabilityNormal;
-        //Fill map with spam words
+        ArrayList<String> stopWords = new ArrayList<>();
+        //Fill list of stopwords.
+        BufferedReader reader = new BufferedReader(new FileReader("stopwords.txt"));
+        while(reader.ready()) {
+            stopWords.add(reader.readLine());
+        }
+        reader.close();
+
+        //Fill map with spam words.
         for (Email body: spamEmailList) {
             String[] words;
             words = body.getBody().split(" ");
             for (String word : words) {
                 if (blackList.containsKey(word) && !analyzed.get(word)) {
-                     Term value = blackList.get(word);
+                    Term value = blackList.get(word);
                     value.setFrequencySpam(value.getFrequencySpam() + 1);
                     blackList.replace(word, value);
                     analyzed.replace(word, false, true);
                 } else {
-                    if (word.length() < 50 && !word.contains("https")) {
+                    if (!stopWords.contains(word) && word.length() < 50 && !word.contains("https")) {
                         Term term = new Term(word, 0, 1, 0.0, 0.0);
                         blackList.put(word, term);
                         analyzed.put(word, true);
@@ -37,7 +46,7 @@ public class Trainer {
             //5 letras = https.
             // más de 50 caracteres.
         }
-        //Fill map with normal words
+        //Fill map with normal words.
         for (Email body: normalEmailList) {
             String[] words;
             words = body.getBody().split(" ");
@@ -48,7 +57,7 @@ public class Trainer {
                     blackList.replace(word, value);
                     analyzed.replace(word, false, true);
                 } else {
-                    if (word.length() < 50 && !word.contains("https")) {
+                    if (!stopWords.contains(word) && word.length() < 50 && !word.contains("https")) {
                         Term term = new Term(word, 1, 0, 0.0, 0.0);
                         blackList.put(word, term);
                         analyzed.put(word, true);
@@ -58,8 +67,6 @@ public class Trainer {
             analyzed.forEach((word, state) -> {
                 analyzed.replace(word, state, false);
             });
-            //5 letras = https.
-            // más de 50 caracteres.
         }
         //Calculate probability for spam and normal words.
         blackList.forEach((word, term) -> {
