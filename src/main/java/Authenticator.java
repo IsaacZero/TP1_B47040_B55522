@@ -25,6 +25,13 @@ public class Authenticator  {
 
     final NetHttpTransport HTTP_TRANSPORT;
 
+    public Authenticator() throws IOException, GeneralSecurityException {
+        HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+    }
+
     public Gmail getService() {
         return service;
     }
@@ -44,13 +51,6 @@ public class Authenticator  {
     Gmail service;
     String user = "me";
 
-    public Authenticator() throws IOException, GeneralSecurityException {
-        HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                .setApplicationName(APPLICATION_NAME)
-                .build();
-    }
-
     private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
         InputStream in = Authenticator.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
@@ -69,7 +69,7 @@ public class Authenticator  {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    private void cleanCredential() throws IOException{
+    public void cleanCredential() throws IOException{
         File directory = new File(TOKENS_DIRECTORY_PATH);
         String files[] = directory.list();
         for (String temp : files) {

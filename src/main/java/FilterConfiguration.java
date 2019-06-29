@@ -42,8 +42,8 @@ public class FilterConfiguration {
         writer.println(spamProbability + " " + spamThreshold + " " + trainerSetSize);
     }
 
-    public void readConfig(){
-        boolean fileFound;
+    public boolean readConfig(){
+        boolean fileFound = true;
         try(BufferedReader reader = new BufferedReader(new FileReader("config.txt"))){
             while(reader.ready()) {
                 String[] words = reader.readLine().split(" ");
@@ -54,5 +54,11 @@ public class FilterConfiguration {
         }catch(Exception e){
             fileFound = false;
         }
+        return fileFound;
+    }
+
+    public void cleanConfiguration() throws IOException{
+        File file = new File("config.txt");
+        file.delete();
     }
 }

@@ -10,10 +10,10 @@ public class Trainer {
 
     }
 
-    public Map<String,Term> train(ArrayList<Email> spamEmailList, ArrayList<Email> normalEmailList)
+    public ArrayMap<String,Term> train(ArrayList<Email> spamEmailList, ArrayList<Email> normalEmailList)
             throws IOException {
         Map<String, Boolean> analyzed = new ArrayMap<String, Boolean>();
-        Map<String,Term> blackList = new ArrayMap<String, Term>();
+        ArrayMap<String,Term> blackList = new ArrayMap<String, Term>();
         ArrayList<String> stopWords = new ArrayList<>();
         //Fill list of stopwords.
         BufferedReader reader = new BufferedReader(new FileReader("stopwords.txt"));
@@ -70,8 +70,8 @@ public class Trainer {
         }
         //Calculate probability for spam and normal words.
         blackList.forEach((word, term) -> {
-            term.setProbSpam((double)(term.getFrequencySpam()/spamEmailList.size()));
-            term.setProbNormal((double)(term.getFrequencyNormal()/normalEmailList.size()));
+            term.setProbSpam((double)term.getFrequencySpam()/spamEmailList.size());
+            term.setProbNormal((double)term.getFrequencyNormal()/normalEmailList.size());
             blackList.replace(word, term);
         });
         return blackList;
