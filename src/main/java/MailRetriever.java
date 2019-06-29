@@ -15,20 +15,17 @@ import java.util.List;
 import java.util.Properties;
 
 public class MailRetriever {
-    private List<Email> messageReservoir;
 
     public MailRetriever() {
     }
-    public MailRetriever(List<Email> emailList){
-        messageReservoir = emailList;
-    }
 
-    public ArrayList<Email> listMessageWithLabels(Gmail service, String userId, List<String> labelsList)
+    public ArrayList<Email> listMessageWithLabels(Gmail service, String userId, List<String> labelsList, int emailAmount)
             throws IOException, MessagingException {
         String to;
         String from;
         String subject;
         String body;
+        int emailCount = 0;
         ArrayList<Email> emailList = new ArrayList<Email>();
 
         ListMessagesResponse response = service.users().messages().list(userId)
@@ -47,40 +44,35 @@ public class MailRetriever {
         }
 
         for (Message message : messages) {
-            message = service.users().messages().get(userId, message.getId()).setFormat("raw").execute();
+            if(emailCount < emailAmount) {
+                message = service.users().messages().get(userId, message.getId()).setFormat("raw").execute();
 
-            byte[] emailBytes = message.decodeRaw();//base64Url.decodeBase64(message.getRaw());// message.getSnippet()
-            Properties props = new Properties();
-            Session session = Session.getDefaultInstance(props, null);
+                byte[] emailBytes = message.decodeRaw();//base64Url.decodeBase64(message.getRaw());// message.getSnippet()
+                Properties props = new Properties();
+                Session session = Session.getDefaultInstance(props, null);
 
-            MimeMessage email = new MimeMessage(session, new ByteArrayInputStream(emailBytes));
-
-            Multipart mp = (Multipart) email.getContent();
-            int numParts = mp.getCount();
-            StringBuilder bodyBuilder = new StringBuilder(1024);
-            for (int count = 0; count < numParts; count++) {
-                MimeBodyPart part = (MimeBodyPart) mp.getBodyPart(count);
-                String content = part.getContent().toString();
-                if (part.getContentType().contains("text/html")) {
-                    bodyBuilder.append(Jsoup.parseBodyFragment(content).text());
+                MimeMessage email = new MimeMessage(session, new ByteArrayInputStream(emailBytes));
+                if (email.isMimeType("multipart/*")) {
+                    Multipart mp = (Multipart) email.getContent();
+                    int numParts = mp.getCount();
+                    StringBuilder bodyBuilder = new StringBuilder(1024);
+                    for (int count = 0; count < numParts; count++) {
+                        MimeBodyPart part = (MimeBodyPart) mp.getBodyPart(count);
+                        String content = part.getContent().toString();
+                        if (part.getContentType().contains("text/html")) {
+                            bodyBuilder.append(Jsoup.parseBodyFragment(content).text());
+                        }
+                    }
+                    body = bodyBuilder.toString();
+                    subject = message.getSnippet();
+                    to = "";
+                    from = "";
+                    Email fullEmail = new Email(body, subject, to, from);
+                    emailList.add(fullEmail);
+                    emailCount++;
                 }
             }
-            body = bodyBuilder.toString();
-            subject = message.getSnippet();
-            to = "";
-            from = "";
-            Email fullEmail = new Email(body, subject, to, from);
-            emailList.add(fullEmail);
         }
         return emailList;
-    }
-
-    public List<Email> getMessageReservoir() {
-        return messageReservoir;
-    }
-
-    public void setMessageReservoir(List<Email> messageReservoir) {
-
-        this.messageReservoir = messageReservoir;
     }
 }
