@@ -58,6 +58,15 @@ public class Controller {
                 }else if(option == 3){
                     menuHandler.viewBlackList(filter.getBlackList());
                 }else if(option == 4){
+                    if(filter.getBlackList().size() == 0){
+                        System.out.printf("- %s\n", "Your Spam Filter is going to train first.");
+                        List<String> spam = new ArrayList<>(1);
+                        spam.add("SPAM");
+                        List<String> normal = new ArrayList<>(1);
+                        normal.add("INBOX");
+                        filter.setBlackList(filter.train(retriever.listMessageWithLabels(log.service, log.user, spam, filter.getFilterConfiguration().getTrainerSetSize()),
+                                retriever.listMessageWithLabels(log.service, log.user, normal, filter.getFilterConfiguration().getTrainerSetSize())));
+                    }
                     List<String> newest = new ArrayList<>(1);
                     newest.add("UNREAD");
                     filter.isSpam(retriever.listMessageWithLabels(log.service, log.user, newest, filter.getFilterConfiguration().getTrainerSetSize()));

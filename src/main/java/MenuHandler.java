@@ -4,15 +4,13 @@ import java.util.Scanner;
 
 public class MenuHandler {
 
-    Scanner input;
-
     public MenuHandler(){
-        input = new Scanner(System.in);
+
     }
 
     public int firstMenuText(){
         int option = 0;
-        //Scanner input = new Scanner(System.in);
+        Scanner input = new Scanner(System.in);
         String optionEntered = "";
         System.out.printf("- %s\n", "Welcome to this Bayesian Spam Filter. Please Select an option" +
                 "\n" + "1) Log In" + "\n" + "2) Exit");

@@ -13,8 +13,10 @@ public class SpamFilter {
 
     public SpamFilter(){
         filterConfiguration = new FilterConfiguration();
+        filterConfiguration.readConfig();
         fileManager = new FileManager();
         trainer = new Trainer();
+        blackList = new ArrayMap<>();
     }
 
     public void isSpam(ArrayList<Email> newEmails){

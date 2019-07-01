@@ -22,11 +22,13 @@ public class FileManager {
     //Saves the word, frequencyNormal, frequencySpam, probSpam and probNormal in that order
     public void saveBlackList(ArrayMap<String, Term> blackList)
             throws FileNotFoundException, UnsupportedEncodingException {
-        PrintWriter writer = new PrintWriter("blacklist.txt", "UTF-8");
-        blackList.forEach((word, term) -> {
-            writer.println(word + " " + term.getFrequencyNormal() + " " + term.getFrequencySpam()
-                    + " " + term.getProbSpam() + " " + term.getProbNormal());
-        });
+        if(blackList.size() != 0) {
+            PrintWriter writer = new PrintWriter("blacklist.txt", "UTF-8");
+            blackList.forEach((word, term) -> {
+                writer.println(word + " " + term.getFrequencyNormal() + " " + term.getFrequencySpam()
+                        + " " + term.getProbSpam() + " " + term.getProbNormal());
+            });
+        }
     }
 
     public void cleanBlacklist() throws IOException{
